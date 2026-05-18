@@ -37,7 +37,186 @@ p {
     margin-bottom: 30px;
 }
 
-/* Boutons */
+/* ── Navbar ── */
+.navbar {
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 1000;
+}
+
+.menu-wrapper {
+    position: relative;
+}
+
+/* Bouton hamburger */
+.hamburger {
+    width: 46px;
+    height: 46px;
+    background: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    transition: background 0.2s;
+    padding: 0;
+}
+
+.hamburger:hover {
+    background: #f0f0f0;
+}
+
+.hamburger span {
+    display: block;
+    width: 22px;
+    height: 2.5px;
+    background: #764ba2;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    transform-origin: center;
+}
+
+/* Animation hamburger → croix */
+.hamburger.active span:nth-child(1) {
+    transform: translateY(7.5px) rotate(45deg);
+}
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+}
+.hamburger.active span:nth-child(3) {
+    transform: translateY(-7.5px) rotate(-45deg);
+}
+
+/* Menu déroulant */
+.dropdown {
+    position: absolute;
+    top: 54px;
+    left: 0;
+    background: white;
+    border-radius: 14px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+    min-width: 200px;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-8px) scale(0.97);
+    pointer-events: none;
+    transition: opacity 0.22s ease, transform 0.22s ease;
+}
+
+.dropdown.open {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.dropdown a {
+    display: block;
+    padding: 13px 20px;
+    text-decoration: none;
+    color: #444;
+    font-size: 15px;
+    font-weight: 600;
+    transition: background 0.15s, color 0.15s;
+}
+
+.dropdown a:hover {
+    background: #f3eeff;
+    color: #764ba2;
+}
+
+.dropdown a + a {
+    border-top: 1px solid #f0f0f0;
+}
+
+/* ── Séparateur ── */
+.dropdown-divider {
+    height: 1px;
+    background: #f0f0f0;
+    margin: 4px 0;
+}
+
+/* ── Sélecteur de page ── */
+.dropdown-picker {
+    padding: 10px 14px 12px;
+}
+
+.picker-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    color: #764ba2;
+    margin-bottom: 8px;
+    letter-spacing: 0.01em;
+}
+
+.picker-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.page-input {
+    flex: 1;
+    padding: 7px 10px;
+    border: 1.5px solid #e0d0f0;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #444;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    width: 0;
+    box-shadow: none;
+}
+
+.page-input:focus {
+    border-color: #764ba2;
+    box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.12);
+}
+
+.page-input.input-error {
+    border-color: #e91e8c;
+    animation: shake 0.3s ease;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+}
+
+/* Masquer les flèches des inputs number */
+.page-input::-webkit-inner-spin-button,
+.page-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+.page-input[type=number] { appearance: textfield; }
+
+.picker-go {
+    padding: 7px 12px;
+    background: linear-gradient(135deg, #e91e8c, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s;
+    box-shadow: 0 2px 8px rgba(118, 75, 162, 0.25);
+    line-height: 1;
+}
+
+.picker-go:hover {
+    opacity: 0.88;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(118, 75, 162, 0.35);
+}
+
+/* ── Boutons ── */
 .buttons {
     display: flex;
     gap: 20px;
@@ -87,7 +266,18 @@ button:active {
     font-size: 16px;
 }
 
-/* Couleurs des titres par page */
+.btn-random {
+    background-color: #e91e8c;
+    color: white;
+}
+
+.btn-random:hover {
+    background-color: #c9177a;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(233, 30, 140, 0.4);
+}
+
+/* ── Couleurs des titres par page ── */
 .page-home h1 {
     color: #333;
 }
@@ -103,4 +293,19 @@ button:active {
 /* Page d'accueil : container plus petit */
 .page-home .container {
     max-width: 500px;
+}
+
+.numero-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #e91e8c, #764ba2);
+    color: white;
+    font-size: 1.4em;
+    font-weight: bold;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    line-height: 60px;
+    text-align: center;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(233, 30, 140, 0.35);
 }

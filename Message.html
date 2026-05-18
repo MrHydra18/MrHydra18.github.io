@@ -9,6 +9,29 @@
 </head>
 
 <body class="page-message">
+    
+    <nav class="navbar">
+        <div class="menu-wrapper">
+            <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="dropdown" id="dropdown">
+                <a href="index.html">🏠 Accueil</a>
+                <a href="Message.html">💌 Message</a>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-picker">
+                    <span class="picker-label">📖 Aller à la page</span>
+                    <div class="picker-row">
+                        <input type="number" id="pageInput" min="1" max="100" placeholder="1–100" class="page-input" />
+                        <button class="picker-go" onclick="allerPageChoisie()">→</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
     <div class="container">
         <h1>Un message pour toi</h1>
         <p>
@@ -22,6 +45,33 @@
         </p>
         <button class="btn-secondary btn-back" onclick="window.location.href='index.html'">Retour</button>
     </div>
+
+    <script>
+
+        function toggleMenu() {
+            const dropdown = document.getElementById('dropdown');
+            const hamburger = document.querySelector('.hamburger');
+            dropdown.classList.toggle('open');
+            hamburger.classList.toggle('active');
+        }
+
+        function allerPageChoisie() {
+            const val = parseInt(document.getElementById('pageInput').value);
+            if (val >= 1 && val <= 100) {
+                window.location.href = 'Pages.html?n=' + val;
+            } else {
+                document.getElementById('pageInput').classList.add('input-error');
+                setTimeout(() => document.getElementById('pageInput').classList.remove('input-error'), 600);
+            }
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && document.activeElement.id === 'pageInput') allerPageChoisie();
+        });
+
+
+    </script>
+
 </body>
 
 </html>

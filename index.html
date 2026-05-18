@@ -9,13 +9,72 @@
 </head>
 
 <body class="page-home">
+
+    <nav class="navbar">
+        <div class="menu-wrapper">
+            <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="dropdown" id="dropdown">
+                <a href="index.html">🏠 Accueil</a>
+                <a href="Message.html">💌 Message</a>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-picker">
+                    <span class="picker-label">📖 Aller à la page</span>
+                    <div class="picker-row">
+                        <input type="number" id="pageInput" min="1" max="100" placeholder="1–100" class="page-input" />
+                        <button class="picker-go" onclick="allerPageChoisie()">→</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
     <div class="container">
-        <h1>Cadeau pour toi 💖!</h1>
+        <h1>100 raisons pour t'aimer 💖!</h1>
         <div class="buttons">
-            <button class="btn-primary" onclick="window.location.href='Mon_Avis.html'">Mon Avis</button>
-            <button class="btn-secondary" onclick="window.location.href='Message.html'">Lis ça si t'en as besoin</button>
+           <button class="btn-random" onclick="allerPageAleatoire()">🎲 Page aléatoire</button>
         </div>
     </div>
+
+    <script>
+        function toggleMenu() {
+            const dropdown = document.getElementById('dropdown');
+            const hamburger = document.querySelector('.hamburger');
+            dropdown.classList.toggle('open');
+            hamburger.classList.toggle('active');
+        }
+
+        // Fermer le menu en cliquant ailleurs
+        document.addEventListener('click', function (e) {
+            const wrapper = document.querySelector('.menu-wrapper');
+            if (!wrapper.contains(e.target)) {
+                document.getElementById('dropdown').classList.remove('open');
+                document.querySelector('.hamburger').classList.remove('active');
+            }
+        });
+
+        function allerPageAleatoire() {
+            const nombre = Math.floor(Math.random() * 100) + 1;
+            window.location.href = 'Pages.html?n=' + nombre;
+        }
+
+        function allerPageChoisie() {
+            const val = parseInt(document.getElementById('pageInput').value);
+            if (val >= 1 && val <= 100) {
+                window.location.href = 'Pages.html?n=' + val;
+            } else {
+                document.getElementById('pageInput').classList.add('input-error');
+                setTimeout(() => document.getElementById('pageInput').classList.remove('input-error'), 600);
+            }
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && document.activeElement.id === 'pageInput') allerPageChoisie();
+        });
+    </script>
 </body>
 
 </html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page</title>
+    <link rel="stylesheet" href="Style.css">
+</head>
+
+<body class="page-numerotee">
+
+    <nav class="navbar">
+        <div class="menu-wrapper">
+            <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="dropdown" id="dropdown">
+                <a href="index.html">🏠 Accueil</a>
+                <a href="Message.html">💌 Message</a>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-picker">
+                    <span class="picker-label">📖 Aller à la page</span>
+                    <div class="picker-row">
+                        <input type="number" id="pageInput" min="1" max="100" placeholder="1–100" class="page-input" />
+                        <button class="picker-go" onclick="allerPageChoisie()">→</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="numero-badge" id="numeroBadge"></div>
+        <h1 id="titre"></h1>
+        <p id="contenu"></p>
+
+        <button class="btn-random" onclick="window.location.href='index.html'">Retour</button>
+
+        <button class="btn-back btn-random" onclick="allerPageAleatoire()">🎲 Page aléatoire</button>
+    </div>
+
+    <script>
+        // Contenu pour chacune des 100 pages
+        const pages = {
+            1:  { titre: "Tu es courageuse", contenu: "Affronter chaque journée avec le sourire quand les choses sont difficiles, c'est une forme de courage que peu de gens reconnaissent. Toi, tu le fais." }, 
+            2:  { titre: "Tu mérites le meilleur", contenu: "Pas juste quelqu'un de correct. Pas juste quelqu'un de présent. Quelqu'un qui te choisit vraiment, chaque jour." },
+            3:  { titre: "Tu es drôle", contenu: "Ton sens de l'humour est une des choses que j'apprécie le plus chez toi. Il manquerait quelque chose dans une pièce sans toi dedans." },
+            4:  { titre: "Tu es forte", contenu: "Pas du genre à ne jamais pleurer — le vrai genre fort. Celui qui ressent tout, qui souffre parfois, mais qui continue quand même." },
+            5:  { titre: "Tu es précieuse", contenu: "Les gens qui comptent dans ta vie le savent. Et même ceux qui ne le disent pas assez." },
+            6:  { titre: "Tu as le droit d'être fière", contenu: "Regarde le chemin parcouru. Même si c'est pas encore là où tu veux être, t'es pas là où t'étais." },
+            7:  { titre: "Tu es intelligente", contenu: "Pas juste scolairement. Intelligence émotionnelle, intuition, lecture des situations — c'est toi ça." },
+            8:  { titre: "Tu n'es pas trop", contenu: "Pas trop intense, pas trop sensible, pas trop exigeante. Juste entière. Et c'est bien." },
+            9:  { titre: "Tu mérites qu'on fasse des efforts", contenu: "Une relation — amicale ou amoureuse — ça se construit à deux. Si tu fais tout, c'est pas équilibré. T'as le droit de le remarquer." },
+            10: { titre: "Tes émotions sont valides", contenu: "Même celles que t'as du mal à expliquer. Même celles qui arrivent sans raison apparente. Elles ont leur place." },
+            
+            
+            11: { titre: "Tu n'as rien à prouver", contenu: "Ni ta valeur, ni ta capacité, ni ton intelligence. T'existes pas pour convaincre les gens que tu mérites d'être là." },
+            12: { titre: "Tu es remarquée", contenu: "Plus de gens t'admirent en silence que tu ne le crois. Certains n'ont juste pas les mots." },
+            13: { titre: "Tu as le droit de dire non", contenu: "Sans culpabilité. Sans long discours. Non, c'est une phrase complète." },
+            14: { titre: "Ton instinct est fiable", contenu: "Cette petite voix qui te dit que quelque chose ne va pas — écoute-la. Elle se trompe moins souvent qu'on pense." },
+            15: { titre: "Tu as de la valeur en dehors de ta productivité", contenu: "T'es pas juste ce que tu produis ou ce que tu accomplis. T'existes aussi pour exister." },
+            16: { titre: "Tu es vue", contenu: "Pas juste regardée. Vraiment vue — dans tes nuances, tes contradictions, ta complexité." },
+            17: { titre: "Tu n'es pas seule", contenu: "Même dans les moments où ça ressemble à ça. Il y a des gens qui tiendraient à être là si tu le leur demandais." },
+            18: { titre: "Tu mérites de la douceur", contenu: "Des gens qui te parlent doucement. Qui font attention. Qui ne te bousculent pas. C'est pas demander trop." },
+            19: { titre: "Ton passé ne te définit pas", contenu: "Ce qui t'est arrivé fait partie de toi, mais c'est pas tout toi. T'es aussi ce que tu choisis maintenant." },
+            20: { titre: "Tu as le droit de changer d'avis", contenu: "Sur des gens, des projets, des rêves, des valeurs. Changer d'avis c'est grandir, pas se trahir." },
+            
+            
+            21: { titre: "Ta présence compte", contenu: "Les espaces que tu habites sont différents quand t'y es. Les gens que tu croises repartent souvent mieux." },
+            22: { titre: "Tu es suffisante", contenu: "Exactement comme tu es. Pas une version améliorée, pas une future toi. Maintenant." },
+            23: { titre: "Tu n'as pas besoin de tout réparer", contenu: "Pas tous les gens, pas toutes les situations, pas toutes les relations. Certaines choses ne t'appartiennent pas à réparer." },
+            24: { titre: "Tu as le droit de prendre de la place", contenu: "Dans une conversation, dans une pièce, dans une relation. T'es pas là pour t'effacer." },
+            25: { titre: "Tu mérites qu'on soit fier de toi", contenu: "Et si quelqu'un ne l'est pas, ça dit quelque chose sur eux — pas sur toi." },
+            26: { titre: "Tu es en train de faire du mieux que tu peux", contenu: "Et c'est déjà énorme. Surtout les jours où le mieux que tu peux c'est juste tenir." },
+            27: { titre: "Tu as de l'humour", contenu: "Vraiment. Le genre qui détend une pièce et qui met les gens à l'aise sans qu'ils s'en rendent compte." },
+            28: { titre: "Tu es aimable", contenu: "Pas dans le sens de 'gentille et sans avis'. Dans le sens où tu mérites d'être aimée profondément." },
+            29: { titre: "Tu n'as pas à tout contrôler", contenu: "Certaines choses vont se régler sans que tu t'en occupes. Lâche un peu. Tu peux." },
+            30: { titre: "Tu mérites une vraie amitié", contenu: "Des gens qui répondent quand ça va pas. Qui s'intéressent à toi au-delà de ce que tu apportes." },
+            
+            
+            31: { titre: "Ta douleur est réelle", contenu: "Que les autres la comprennent ou pas, que tu saches l'expliquer ou pas. Elle est là, elle est réelle, et elle mérite d'être prise au sérieux." },
+            32: { titre: "Tu peux demander de l'aide", contenu: "C'est pas un aveu de faiblesse. C'est reconnaître qu'on n'est pas fait pour tout porter seul." },
+            33: { titre: "Tu as le droit d'être heureuse", contenu: "Pas quand tu auras prouvé que tu le mérites. Pas après. Maintenant." },
+            34: { titre: "Tes rêves ont de la valeur", contenu: "Même ceux qui semblent grands, même ceux qui semblent flous. Ils te disent quelque chose d'important sur toi." },
+            35: { titre: "Tu inspires les gens", contenu: "Plus souvent que tu ne le sais. Des choses que tu as dites ou faites ont marqué des gens sans que tu t'en rendes compte." },
+            36: { titre: "Tu n'es pas responsable des émotions des autres", contenu: "Tu peux être attentionnée sans porter ce qui appartient aux autres. C'est leur travail, pas le tien." },
+            37: { titre: "Tu es honnête", contenu: "Et c'est rare. Vraiment. Les gens qui disent ce qu'ils pensent avec bienveillance, c'est pas si courant." },
+            38: { titre: "Tu mérites la cohérence", contenu: "Des gens qui sont là dans la durée, pas juste quand c'est commode. La constance, c'est une forme de respect." },
+            39: { titre: "Tu as survécu à toutes tes mauvaises journées", contenu: "100% de tes pires moments, tu les as traversés. C'est pas rien." },
+            40: { titre: "Tu peux être vulnérable", contenu: "Montrer que ça va pas, c'est pas perdre. C'est faire confiance. Et les bonnes personnes le méritent." },
+           
+            
+            41: { titre: "Tu es curieuse", contenu: "La façon dont tu t'intéresses aux choses et aux gens, ça se voit. C'est une qualité rare et précieuse." },
+            42: { titre: "Tu mérites la vérité", contenu: "Pas des demi-vérités pour ménager les sensibilités. La vraie vérité, dite avec respect. T'es capable de l'entendre." },
+            43: { titre: "Tu n'es pas trop sensible", contenu: "Tu ressens beaucoup parce que tu es attentive. C'est une force mal comprise, pas un défaut." },
+            44: { titre: "Tu es généreuse", contenu: "Dans ton temps, ton énergie, ton attention. Assure-toi juste que cette générosité est réciproque." },
+            45: { titre: "Tu as le droit de partir", contenu: "D'une relation, d'une situation, d'une conversation. Partir ce n'est pas abandonner. C'est parfois se respecter." },
+            46: { titre: "Tu mérites d'être choisie", contenu: "Pas tolérée, pas supportée, pas gardée par défaut. Choisie. Activement, clairement, régulièrement." },
+            47: { titre: "Ton rythme est le bon", contenu: "Pas besoin d'avancer au rythme des autres. Ton chemin est le tien." },
+            48: { titre: "Tu as le droit d'avoir besoin de temps", contenu: "Pour guérir, pour décider, pour comprendre. Prendre son temps c'est pas reculer." },
+            49: { titre: "Tu es déjà en train de progresser", contenu: "Même quand ça se voit pas. Même quand tu sens que tu stagues. En dessous, quelque chose travaille." },
+            50: { titre: "Tu es à mi-chemin 🌟", contenu: "Et regarde — tu as continué même quand c'était dur. C'est exactement comme dans la vraie vie." },
+            
+            
+            51: { titre: "Tu n'as pas à être parfaite", contenu: "La perfection est une prison. L'authenticité est une libération. T'es bien plus intéressante imparfaite." },
+            52: { titre: "Tu comptes pour les autres", contenu: "Des gens se demanderaient ce qui se passe si tu disparaissais de leur vie. Plus que tu ne le penses." },
+            53: { titre: "Tu as de la grâce", contenu: "Dans la façon dont tu navigues des situations difficiles, dont tu traites les autres. Ça ne passe pas inaperçu." },
+            54: { titre: "Tu es entière", contenu: "Avec tes doutes, tes forces, tes contradictions. T'es pas un projet à finir. T'es une personne à part entière." },
+            55: { titre: "Tu mérites la paix", contenu: "Pas juste l'absence de conflit. La vraie paix — intérieure, relationnelle, quotidienne." },
+            56: { titre: "Tu peux faire confiance à tes besoins", contenu: "Ce dont tu as besoin est légitime. Pas exagéré, pas dramatique. Légitime." },
+            57: { titre: "Tu es capable", contenu: "De plus que tu ne crois. Souvent les limites qu'on se fixe sont plus petites que ce qu'on est vraiment." },
+            58: { titre: "Tu as le droit d'être en colère", contenu: "La colère n'est pas laide. C'est une information — elle te dit que quelque chose important a été transgressé." },
+            59: { titre: "Tu mérites des excuses sincères", contenu: "Pas 'désolé si tu t'es sentie blessée'. Désolé point. Avec une reconnaissance de ce qui s'est passé." },
+            60: { titre: "Tu n'es pas trop exigeante", contenu: "Vouloir de la cohérence, du respect, de la communication — c'est pas être exigeante. C'est savoir ce qu'on mérite." },
+            
+            
+            61: { titre: "Tu es lumineuse", contenu: "Il y a quelque chose dans ton énergie qui allège les pièces. C'est rare et c'est toi." },
+            62: { titre: "Tu as le droit de te protéger", contenu: "Mettre des limites, s'éloigner de ce qui fait du mal, prioriser son bien-être — c'est pas de l'égoïsme." },
+            63: { titre: "Tu mérites la constance", contenu: "Des gens qui sont là pas juste dans les bons moments, pas juste quand c'est facile." },
+            64: { titre: "Tu peux commencer petit", contenu: "Un seul pas dans une nouvelle direction change déjà la trajectoire. Pas besoin de tout révolutionner d'un coup." },
+            65: { titre: "Tu es originale", contenu: "La façon dont tu vois les choses, dont tu les exprimes — c'est toi et personne d'autre. Garde ça." },
+            66: { titre: "Tu n'es pas seule dans ce que tu ressens", contenu: "Beaucoup de gens traversent des choses similaires sans le dire. Tu n'es pas la seule." },
+            67: { titre: "Tu mérites de te sentir en sécurité", contenu: "Avec les gens que tu fréquentes, dans les lieux où tu vas, dans tes relations. La sécurité n'est pas un luxe." },
+            68: { titre: "Tu as une belle façon d'aimer", contenu: "Profonde, attentionnée, loyale. Les gens qui reçoivent ça ont beaucoup de chance." },
+            69: { titre: "Tu mérites qu'on t'écoute vraiment", contenu: "Pas qu'on attende son tour pour parler. Vraiment écoutée, jusqu'au bout, avec intérêt." },
+            70: { titre: "Tu n'as pas à minimiser ta douleur", contenu: "'C'est pas si grave', 'ça va' — des fois c'est faux. T'as le droit de dire que c'est difficile." },
+            
+            
+            71: { titre: "Tu es résiliente", contenu: "T'as déjà traversé des choses difficiles et t'es là. C'est une preuve, même si ça ne ressemble pas à une victoire." },
+            72: { titre: "Tu mérites qu'on investisse en toi", contenu: "Du temps, de l'énergie, de l'attention. Une relation à sens unique n'est pas une relation." },
+            73: { titre: "Tu as une belle sensibilité", contenu: "Elle te permet de ressentir des choses que d'autres ratent complètement. C'est un don, même quand ça fait mal." },
+            74: { titre: "Tu peux t'autoriser la joie", contenu: "Même quand tout n'est pas parfait. Même si quelqu'un d'autre souffre. La joie n'est pas coupable." },
+            75: { titre: "Tu mérites la transparence", contenu: "Des gens qui te disent les choses clairement, qui n'ont pas d'agenda caché, qui jouent franc jeu." },
+            76: { titre: "Tu es quelqu'un de bien", contenu: "Vraiment. Pas parfait — quelqu'un de bien. La différence est importante." },
+            77: { titre: "Tu peux faire confiance au processus", contenu: "Même quand t'y vois pas clair. Même quand le chemin semble chaotique. Les choses se placent." },
+            78: { titre: "Tu mérites des gens qui restent", contenu: "Qui ne disparaissent pas dès que c'est compliqué. Qui sont là dans la durée." },
+            79: { titre: "Tu n'es pas trop compliquée", contenu: "T'es juste complexe. Et les gens qui le valent prennent le temps de comprendre la différence." },
+            80: { titre: "Tu es digne de confiance", contenu: "Les gens qui te donnent leur confiance ont bien raison. Tu la portes avec soin." },
+            
+            
+            81: { titre: "Tu mérites un amour facile", contenu: "Pas sans effort — facile. Où tu n'as pas à te demander si tu es aimée. Où tu le sais." },
+            82: { titre: "Tu as le droit d'avoir tes propres standards", contenu: "Et de ne pas les baisser pour que quelqu'un reste. Les bons resteront pour les bonnes raisons." },
+            83: { titre: "Tu es profonde", contenu: "Dans tes pensées, tes relations, ta façon d'habiter le monde. C'est une qualité rare." },
+            84: { titre: "Tu n'as pas besoin de te justifier", contenu: "Tes choix, ton style, ta vie — tu n'as pas à les expliquer à ceux qui ne les méritent pas." },
+            85: { titre: "Tu mérites d'être surprise en bien", contenu: "Des gens qui font des efforts sans qu'on leur demande. Des moments inattendus de douceur." },
+            86: { titre: "Tu as le droit de ne pas aller bien", contenu: "Pas besoin de sourire si c'est faux. Pas besoin de performer que tout va si c'est pas le cas." },
+            87: { titre: "Tu es inspirante", contenu: "Même sans le savoir. Des choses que tu fais ou dis donnent envie aux autres d'être meilleurs." },
+            88: { titre: "Tu mérites la clarté", contenu: "Dans les relations, dans les situations, dans les sentiments des autres envers toi. Le flou prolongé n'est pas normal." },
+            89: { titre: "Tu peux recommencer", contenu: "Autant de fois qu'il le faut. Chaque recommencement c'est pas un échec — c'est une correction de trajectoire." },
+            90: { titre: "Tu as une belle énergie", contenu: "Le genre qui met les gens à l'aise sans qu'ils sachent pourquoi. C'est toi ça." },
+            
+            
+            91: { titre: "Tu mérites des gens honnêtes", contenu: "Qui te disent les choses en face, avec bienveillance. Pas des gens qui te disent ce que tu veux entendre." },
+            92: { titre: "Tu n'as pas à porter l'histoire des autres", contenu: "Si quelqu'un te traite mal à cause de ce que d'autres lui ont fait — c'est son problème à régler, pas le tien à payer." },
+            93: { titre: "Tu es attendue quelque part", contenu: "Des gens, des endroits, des versions de toi qui ne savent pas encore que tu existes mais qui t'attendent." },
+            94: { titre: "Tu mérites d'être célébrée", contenu: "Pas juste dans les grands moments. Dans les petits aussi. Dans le quotidien." },
+            95: { titre: "Tu peux te faire confiance", contenu: "Tes décisions, ton jugement, ton instinct. T'as plus souvent raison que tu ne le crois." },
+            96: { titre: "Tu es quelqu'un qu'on veut garder dans sa vie", contenu: "Ceux qui ne le réalisent pas passent à côté de quelque chose d'important." },
+            97: { titre: "Tu mérites un espace sûr", contenu: "Pour être toi-même sans avoir à te surveiller, sans craindre d'être jugée, sans te sentir de trop." },
+            98: { titre: "Tu es arrivée presque à la fin", contenu: "Et si tu en avais besoin, j'espère que quelques-uns de ces mots ont atterri quelque part en toi." },
+            99: { titre: "Encore une", contenu: "T'es quelqu'un de vraiment bien. C'est simple, c'est sincère, et c'est vrai." },
+            100: { titre: "Bravo, tu es arrivée à la fin 🎉", contenu: "100 raisons de valoir quelque chose. Et c'est pas même proche d'être exhaustif. Prends soin de toi. 💜" }
+        };
+
+
+        function toggleMenu() {
+            const dropdown = document.getElementById('dropdown');
+            const hamburger = document.querySelector('.hamburger');
+            dropdown.classList.toggle('open');
+            hamburger.classList.toggle('active');
+        }
+
+        function allerPageAleatoire() {
+            const nombre = Math.floor(Math.random() * 100) + 1;
+            window.location.href = 'Pages.html?n=' + nombre;
+        }
+
+        function allerPageChoisie() {
+            const val = parseInt(document.getElementById('pageInput').value);
+            if (val >= 1 && val <= 100) {
+                window.location.href = 'Pages.html?n=' + val;
+            } else {
+                document.getElementById('pageInput').classList.add('input-error');
+                setTimeout(() => document.getElementById('pageInput').classList.remove('input-error'), 600);
+            }
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && document.activeElement.id === 'pageInput') allerPageChoisie();
+        });
+
+        // Lire le paramètre n dans l'URL
+        const params = new URLSearchParams(window.location.search);
+        const n = parseInt(params.get('n'));
+
+        // Vérifier que le numéro est valide
+        if (!n || n < 1 || n > 100 || !pages[n]) {
+            document.getElementById('titre').textContent = "Page introuvable";
+            document.getElementById('contenu').textContent = "Ce numéro de page n'existe pas. Reviens à l'accueil.";
+            document.getElementById('numeroBadge').textContent = "?";
+        } else {
+            document.title = "Page " + n;
+            document.getElementById('numeroBadge').textContent = n;
+            document.getElementById('titre').textContent = pages[n].titre;
+            document.getElementById('contenu').textContent = pages[n].contenu;
+        }
+    </script>
+</body>
+
+</html>
