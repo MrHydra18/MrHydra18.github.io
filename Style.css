@@ -283,24 +283,29 @@ button:active {
 
 @media (max-width: 600px) {
     .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 18px;
         padding: 35px 20px;
         width: 92%;
     }
 
     .buttons {
+        width: 100%;
         flex-direction: column;
         align-items: center;
         gap: 18px;
     }
 
-    .container > button {
-        display: block;
+    .container > button,
+    .container > .buttons {
         width: min(100%, 260px);
     }
 
     .container > button + button {
         margin-left: 0;
-        margin-top: 18px;
+        margin-top: 0;
     }
 }
 
